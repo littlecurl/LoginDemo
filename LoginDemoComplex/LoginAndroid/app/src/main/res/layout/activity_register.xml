@@ -148,14 +148,15 @@
                 android:text="密码" />
 
             <EditText
-                android:id="@+id/et_password1"
+                android:id="@+id/et_password"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
                 android:ems="10"
                 android:hint="请输入密码"
                 android:inputType="textPassword"
-                android:singleLine="true" />
+                android:singleLine="true"
+                android:selectAllOnFocus="true"/>
 
             <EditText
                 android:id="@+id/et_password2"
@@ -165,7 +166,8 @@
                 android:ems="10"
                 android:hint="请再次输入密码"
                 android:inputType="textPassword"
-                android:singleLine="true" />
+                android:singleLine="true"
+                android:selectAllOnFocus="true"/>
 
             <Button
                 android:id="@+id/bt_submit_register"

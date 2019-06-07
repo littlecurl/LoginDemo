@@ -14,7 +14,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
         android:layout_marginLeft="32dp"
-        android:layout_marginTop="208dp"
+        android:layout_marginTop="192dp"
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
         android:text="账号"
@@ -30,12 +30,13 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
-        android:layout_marginTop="196dp"
+        android:layout_marginTop="180dp"
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
         android:ems="10"
-        android:hint="用户名/手机号"
+        android:hint="手机号"
         android:inputType="textPersonName"
+        android:maxLength="11"
         android:singleLine="true"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.201"
@@ -55,7 +56,7 @@
         app:layout_constraintTop_toBottomOf="@+id/tv_account" />
 
     <EditText
-        android:id="@+id/et_password1"
+        android:id="@+id/et_password"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -78,14 +79,14 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="35dp"
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
         android:text="登录"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/et_password1" />
+        app:layout_constraintTop_toBottomOf="@+id/et_password" />
 
     <TextView
         android:id="@+id/tv_forget_password"
@@ -177,7 +178,7 @@
         app:layout_constraintVertical_bias="0.244" />
 
     <View
-        android:id="@+id/divider2"
+        android:id="@+id/divider_right"
         android:layout_width="100dp"
         android:layout_height="1dp"
         android:layout_marginEnd="8dp"
@@ -200,7 +201,7 @@
         android:layout_marginBottom="8dp"
         android:text="第三方登录"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/divider2"
+        app:layout_constraintEnd_toStartOf="@+id/divider_right"
         app:layout_constraintStart_toEndOf="@+id/divider_left"
         app:layout_constraintTop_toBottomOf="@+id/tv_vertical_line"
         app:layout_constraintVertical_bias="0.255" />

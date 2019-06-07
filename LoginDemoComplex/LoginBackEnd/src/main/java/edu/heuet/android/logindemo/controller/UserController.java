@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import sun.misc.BASE64Encoder;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -51,6 +52,8 @@ public class UserController extends BaseController{
 
     @Autowired
     private HttpServletRequest httpServletRequest;
+
+    private HttpSession session;
 
     /*  */
     /*
@@ -149,7 +152,8 @@ public class UserController extends BaseController{
         // 2、将OTP验证码与用户手机号进行绑定
         // 通过HttpServletRequest对象得到session，将手机号和验证码放到session中
         // 等注册流程需要的时候再去session获取
-        httpServletRequest.getSession().setAttribute(telphone,otpCode);
+        session = httpServletRequest.getSession();
+        session.setAttribute(telphone,otpCode);
 
         // 3、将OTP验证码通过短信通道发给用户，省略
         Log.info("telephone: " + telphone + "&otpCode: " + otpCode);
@@ -176,7 +180,7 @@ public class UserController extends BaseController{
                                         ) throws UnsupportedEncodingException, NoSuchAlgorithmException, BusinessException {
         // 从Session中获取对应手机号的验证码
         // otpCode是用户填写的，inSessionOtpCode是系统生成的
-        String inSessionOtpCode = (String)this.httpServletRequest.getSession().getAttribute(telphone);
+        String inSessionOtpCode = (String)session.getAttribute(telphone);
         Log.info("telphone: "+telphone+" inSessionOtpCode: "+ inSessionOtpCode +" otpCode: "+otpCode);
         if (!StringUtils.equals(otpCode, inSessionOtpCode)){
             Log.info("短信验证码错误");
@@ -220,14 +224,17 @@ public class UserController extends BaseController{
         }
         System.out.println("传进来参数了： telphone："+telphone
                 +"password："+password);
-        UserModel userModel;
+        boolean hasRegisted = userService.getUserByTelphone(telphone);
+        if(!hasRegisted){
+            throw new BusinessException(EmBusinessError.USER_NOT_EXIST);
+        }
         // 用户登录服务，校验登录是否合法
-        userModel = userService.validateLogin(telphone, this.EncodeByMd5(password));
+        UserModel userModel = userService.validateLogin(telphone, this.EncodeByMd5(password));
 
         // 将登陆凭证加入到用户登录成功的Session中
         // 切换web页面的时候，可以不用重复登录
-        this.httpServletRequest.getSession().setAttribute("IS_LOGIN",true);
-        this.httpServletRequest.getSession().setAttribute("LOGIN_USER", userModel);
+        session.setAttribute("IS_LOGIN",true);
+        session.setAttribute("LOGIN_USER", userModel);
         // 登录成功，只返回success即可
         return CommonReturnType.create(null);
     }

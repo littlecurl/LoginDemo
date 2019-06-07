@@ -173,9 +173,7 @@ public class UserServiceImpl implements UserService  {
     @Override
     public UserModel validateLogin(String telphone, String encryptPassword) throws BusinessException {
         // 通过用户的手机获取用户信息
-        /*
-        这里的selectByTelphone是我们在UserDOMapper.xml中手动实现的
-         */
+        /* 这里的selectByTelphone是我们在UserDOMapper.xml中手动实现的 */
         UserDO userDO = userDOMapper.selectByTelphone(telphone);
         if (userDO == null){
             throw new BusinessException(EmBusinessError.USER_LOGIN_FAIL);
@@ -185,7 +183,7 @@ public class UserServiceImpl implements UserService  {
 
         // 比对用户信息内加密的面是否和传输进来的密码相匹配
         if (!StringUtils.equals(encryptPassword,userModel.getEncryptPassword())){
-            throw new BusinessException(EmBusinessError.PARAMETER_VALIDATION_ERROR);
+            throw new BusinessException(EmBusinessError.PARAMETER_VALIDATION_ERROR,"用户名或密码错误");
         }
         return userModel;
     }

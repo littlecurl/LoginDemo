@@ -2,7 +2,6 @@ package cn.edu.heuet.login;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.Looper;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -17,12 +16,13 @@ import com.google.gson.JsonParser;
 
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import cn.edu.heuet.login.common.Common;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.FormBody;
-import okhttp3.Headers;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
@@ -55,19 +55,22 @@ public class RegisterActivity extends AppCompatActivity
         initUI();
         // 为点击事件设置监听器
         setOnClickListener();
-        // 优化用户体验
-        // 接收用户在登录界面输入的数据，输入过了就不该再输入了
+
+         /*
+            设置当输入框焦点失去时提示错误信息
+            第一个参数指明输入框对象
+            第二个参数指明输入数据类型
+            第三个参数指明输入不合法时提示信息
+         */
+        setOnFocusChangeErrMsg(et_telphone,"phone","手机号格式不正确");
+        setOnFocusChangeErrMsg(et_password1,"password","密码必须不少于6位");
+        setOnFocusChangeErrMsg(et_gender,"gender","性别只能填1或2");
+        // 接收用户在登录界面输入的数据，如果输入过了就不用再输入了
         // 注意接收上一个页面Intent的信息，需要getIntent，而非重新new一个Intent
         Intent it_from_login = getIntent();
         account = it_from_login.getStringExtra("account");
-        password =  it_from_login.getStringExtra("password");
         // 把对应的account设置到telphone输入框
-        if (account.isEmpty()){
-            et_telphone.setText(account);
-        }
-        if (password.isEmpty()){
-            et_password1.setText(password);
-        }
+        et_telphone.setText(account);
     }
     // 初始化UI对象
     private void initUI(){
@@ -78,9 +81,70 @@ public class RegisterActivity extends AppCompatActivity
         et_username = findViewById(R.id.et_username);
         et_gender = findViewById(R.id.et_gender);
         et_age = findViewById(R.id.et_age);
-        et_password1 = findViewById(R.id.et_password1);
+        et_password1 = findViewById(R.id.et_password);
         et_password2 = findViewById(R.id.et_password2);
     }
+
+    /*
+    当输入账号FocusChange时，校验账号是否是中国大陆手机号
+    当输入密码FocusChange时，校验密码是否不少于6位
+     */
+    private void setOnFocusChangeErrMsg(EditText editText,String inputType, String errMsg){
+        editText.setOnFocusChangeListener(
+                new View.OnFocusChangeListener() {
+                    @Override
+                    public void onFocusChange(View v, boolean hasFocus) {
+                        String inputStr = editText.getText().toString();
+                        if (!hasFocus){
+                            if(inputType == "phone"){
+                                if (isTelphoneValid(inputStr)){
+                                    editText.setError(null);
+                                }else {
+                                    editText.setError(errMsg);
+                                }
+                            }
+                            if (inputType == "password"){
+                                if (isPasswordValid(inputStr)){
+                                    editText.setError(null);
+                                }else {
+                                    editText.setError(errMsg);
+                                }
+                            }
+                            if (inputType == "gender"){
+                                if (isGenderValid(inputStr)){
+                                    editText.setError(null);
+                                }else {
+                                    editText.setError(errMsg);
+                                }
+                            }
+                        }
+                    }
+                }
+        );
+    }
+
+    // 校验账号不能为空且必须是中国大陆手机号（宽松模式匹配）
+    private boolean isTelphoneValid(String account) {
+        if (account == null) {
+            return false;
+        }
+        // 首位为1, 第二位为3-9, 剩下九位为 0-9, 共11位数字
+        String pattern = "^[1]([3-9])[0-9]{9}$";
+        Pattern r = Pattern.compile(pattern);
+        Matcher m = r.matcher(account);
+        return m.matches();
+    }
+
+    // 校验密码不少于6位
+    private boolean isPasswordValid(String password) {
+        return password != null && password.trim().length() > 5;
+    }
+
+    // 性别只能填1或2
+    private boolean isGenderValid(String gender){
+        return gender.equals("1") || gender.equals("2");
+    }
+
     // 为点击事件的UI对象设置监听器
     private void setOnClickListener(){
         bt_get_otp.setOnClickListener(this);
@@ -150,13 +214,7 @@ public class RegisterActivity extends AppCompatActivity
                     }
                     @Override
                     public void onResponse(Call call, Response response) throws IOException {
-                        Log.d(TAG, response.protocol() + " " +response.code() + " " + response.message());
-                        Headers headers = response.headers();
-                        for (int i = 0; i < headers.size(); i++) {
-                            Log.d(TAG, headers.name(i) + ":" + headers.value(i));
-                        }
                         // response.body().string()只能调用一次，多次调用会报错
-                        // Log.d(TAG, "onResponse: " + response.body().string());
                         String responseData = response.body().string();
                         JsonObject responseBodyJSONObject = (JsonObject) new JsonParser().parse(responseData);
                         // 如果返回的status为success，代表获取验证码成功
@@ -194,7 +252,7 @@ public class RegisterActivity extends AppCompatActivity
                     // 1、初始化okhttpClient对象
                     OkHttpClient okHttpClient = new OkHttpClient();
                     // 2、构建请求体
-                    // 注意这里的name 要和后端意义对应，否则无法传递过去
+                    // 注意这里的name 要和后端接收的参数名一一对应，否则无法传递过去
                     RequestBody requestBody = new FormBody.Builder()
                             .add("telphone", telphone)
                             .add("otpCode" , otpCode)
@@ -218,17 +276,7 @@ public class RegisterActivity extends AppCompatActivity
 
                         @Override
                         public void onResponse(Call call, Response response) throws IOException {
-                            /*
-                            作为开发版，下面的Log信息就保留在这了
-                             */
-                            Log.d(TAG, response.protocol() + " " +response.code() + " " + response.message());
-                            Headers headers = response.headers();
-                            for (int i = 0; i < headers.size(); i++) {
-                                Log.d(TAG, headers.name(i) + ":" + headers.value(i));
-                            }
-
                             // response.body().string()只能调用一次，多次调用会报错
-                            // Log.d(TAG, "onResponse: " + response.body().string());
                             String responseBodyStr = response.body().string();
                             JsonObject responseBodyJSONObject = (JsonObject) new JsonParser().parse(responseBodyStr);
                             // 如果返回的status为success，代表验证通过
@@ -257,24 +305,18 @@ public class RegisterActivity extends AppCompatActivity
         // String responseData = response.body().string();
         // 2、通过JSON解析器JsonParser()把字符串解析为JSON对象，
         //
-        // *****前两步抽到方法外面了*****
+        // *****前两步抽写方法外面了*****
         //
         // JsonObject jsonObject = (JsonObject) new JsonParser().parse(responseBodyStr);
         // 3、通过JSON对象获取对应的属性值
         String status = responseBodyJSONObject.get("status").getAsString();
-        /*
-        只有获取验证码时，返回的data才有数据
-         */
+        /* 只有获取验证码时，返回的data才有数据 */
         if (status.equals("successGetOtpCode")) {
             JsonObject dataObject = responseBodyJSONObject.get("data").getAsJsonObject();
             if (!dataObject.isJsonNull()) {
                 String telphone = dataObject.get("telphone").getAsString();
                 String otpCode = dataObject.get("otpCode").getAsString();
-                /*
-                 在子线程中更新UI
-                 此方法必须在Toast方法之前调用
-                 否则无法刷新出验证码，具体逻辑我也不清楚，尝试出来的
-                  */
+                // 自动填充验证码
                 setTextInThread(et_otpCode, otpCode);
                 // 在子线程中显示Toast
                 showToastInThread(context,"验证码："+otpCode);
@@ -287,8 +329,7 @@ public class RegisterActivity extends AppCompatActivity
         return status.equals("success");
     }
 
-    // 获取验证码返回
-
+    // 获取验证码响应data
     // 使用Gson解析response返回异常信息的JSON中的data对象
     private void getResponseData(Context context, JsonObject responseBodyJSONObject){
         JsonObject dataObject = responseBodyJSONObject.get("data").getAsJsonObject();
@@ -299,10 +340,7 @@ public class RegisterActivity extends AppCompatActivity
         showToastInThread(context,errorMsg);
     }
 
-    /*
-    在子线程中更新UI
-    来实现自动填充验证码
-     */
+    /* 在子线程中更新UI ，实现自动填充验证码 */
     private void setTextInThread(EditText editText,String otpCode){
         runOnUiThread(new Runnable() {
             @Override
@@ -311,17 +349,15 @@ public class RegisterActivity extends AppCompatActivity
             }
         });
     }
-    /*
-    实现在子线程中显示Toast
-     */
+    /* 实现在子线程中显示Toast */
     private void showToastInThread(Context context,String msg){
-        Looper.prepare();
-        Toast.makeText(context, msg, Toast.LENGTH_LONG).show();
-        Looper.loop();
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(context, msg, Toast.LENGTH_LONG).show();
+            }
+        });
     }
-
-
-
 
 }
 

@@ -12,8 +12,16 @@ public interface Common {
     可以使用10.0.2.2来代表本机电脑IP
     这样做的好处就是不用每次断网重连后去ipconfig
      */
-    String hostname = "10.0.2.2";
-    String serverPort = "8090";
+//    String hostname = "10.0.2.2";
+//    String serverPort = "8090";
+    /*
+       如果想真机安装运行，可以自己租服务器，
+       也可以使用花生壳等内网穿透工具获得公网域名
+       如下所示
+     */
+    String hostname = "littlecurl.imwork.net";
+    String serverPort = "35304";
+
     String getOtpCodeURL = "http://"+hostname+":"+serverPort+"/user/getOtp";
     String loginURL = "http://"+hostname+":"+serverPort+"/user/login";
     String registerURL = "http://"+hostname+":"+serverPort+"/user/register";
