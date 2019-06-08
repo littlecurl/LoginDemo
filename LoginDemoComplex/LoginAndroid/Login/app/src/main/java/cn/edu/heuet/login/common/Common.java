@@ -1,5 +1,7 @@
 package cn.edu.heuet.login.common;
-
+/*
+这些内容按理说都应该在配置文件中，方便一些我直接放接口这里了
+ */
 public interface Common {
     /*
       如果使用的模拟器不是AndroidStudio自带的
@@ -19,8 +21,10 @@ public interface Common {
        也可以使用花生壳等内网穿透工具获得公网域名
        如下所示
      */
-    String hostname = "littlecurl.imwork.net";
-    String serverPort = "35304";
+//    String hostname = "littlecurl.imwork.net";
+//    String serverPort = "35304";
+    String hostname = "www.qiudong.xyz";
+    String serverPort = "8080";
 
     String getOtpCodeURL = "http://"+hostname+":"+serverPort+"/user/getOtp";
     String loginURL = "http://"+hostname+":"+serverPort+"/user/login";
