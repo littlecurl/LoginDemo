@@ -283,36 +283,43 @@ public class LoginActivity extends AppCompatActivity
 
                     @Override
                     public void onResponse(Call call, Response response) throws IOException {
-                        /*
-                          注意这里，同一个方法内
-                          response.body().string()只能调用一次，多次调用会报错
-                        */
-                        /* 使用Gson解析response的JSON数据的第一步 */
-                        String responseBodyStr = response.body().string();
-                        /* 使用Gson解析response的JSON数据的第二步 */
-                        JsonObject responseBodyJSONObject = (JsonObject) new JsonParser().parse(responseBodyStr);
-                        // 如果返回的status为success，则getStatus返回true，登录验证通过
-                        if ( getStatus(LoginActivity.this, responseBodyJSONObject) ){
+                        // 先判断一下服务器是否异常
+                        String responseStr = response.toString();
+                        if (responseStr.contains("404") || responseStr.contains("500")) {
+                            Log.d(TAG,"服务器异常");
+                            showToastInThread(LoginActivity.this, responseStr);
+                        } else {
+                             /*
+                            注意这里，同一个方法内
+                            response.body().string()只能调用一次，多次调用会报错
+                             */
+                            /* 使用Gson解析response的JSON数据的第一步 */
+                            String responseBodyStr = response.body().string();
+                            /* 使用Gson解析response的JSON数据的第二步 */
+                            JsonObject responseBodyJSONObject = (JsonObject) new JsonParser().parse(responseBodyStr);
+                            // 如果返回的status为success，则getStatus返回true，登录验证通过
+                            if (getStatus(LoginActivity.this, responseBodyJSONObject)) {
                             /*
                              更新token，下次自动登录
                              真实的token值应该是一个加密字符串
                              我为了让token不为null，就随便传了一个字符串
                             */
-                            editor = sp.edit();
-                            editor.putString("token","token_value");
-                            editor.putString("telphone",telphone);
-                            if (editor.commit()) {
-                                Intent it_login_to_main = new Intent(LoginActivity.this, MainActivity.class);
-                                it_login_to_main.putExtra("telphone", telphone);
-                                startActivity(it_login_to_main);
-                                // 登录成功后，登录界面就没必要占据资源了
-                                finish();
+                                editor = sp.edit();
+                                editor.putString("token", "token_value");
+                                editor.putString("telphone", telphone);
+                                if (editor.commit()) {
+                                    Intent it_login_to_main = new Intent(LoginActivity.this, MainActivity.class);
+                                    it_login_to_main.putExtra("telphone", telphone);
+                                    startActivity(it_login_to_main);
+                                    // 登录成功后，登录界面就没必要占据资源了
+                                    finish();
+                                } else {
+                                    showToastInThread(LoginActivity.this, "token保存失败，请重新登录");
+                                }
                             } else {
-                                showToastInThread(LoginActivity.this, "token保存失败，请重新登录");
+                                getResponseData(LoginActivity.this, responseBodyJSONObject);
+                                Log.d(TAG, "账号或密码验证失败");
                             }
-                        } else {
-                            getResponseData(LoginActivity.this, responseBodyJSONObject);
-                            Log.d(TAG, "账号或密码验证失败");
                         }
                     }
                 });

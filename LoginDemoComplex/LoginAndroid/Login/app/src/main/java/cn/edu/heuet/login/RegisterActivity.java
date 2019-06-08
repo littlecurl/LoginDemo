@@ -214,14 +214,21 @@ public class RegisterActivity extends AppCompatActivity
                     }
                     @Override
                     public void onResponse(Call call, Response response) throws IOException {
-                        // response.body().string()只能调用一次，多次调用会报错
-                        String responseData = response.body().string();
-                        JsonObject responseBodyJSONObject = (JsonObject) new JsonParser().parse(responseData);
-                        // 如果返回的status为success，代表获取验证码成功
-                        if ( getResponseStatus(RegisterActivity.this,responseBodyJSONObject) ){
-                            Log.d(TAG,"验证码已发送，注意查收！");
+                        // 先判断一下服务器是否异常
+                        String responseStr = response.toString();
+                        if (responseStr.contains("404") || responseStr.contains("500")) {
+                            Log.d(TAG, "服务器异常");
+                            showToastInThread(RegisterActivity.this, responseStr);
                         } else {
-                            getResponseData(RegisterActivity.this,responseBodyJSONObject);
+                            // response.body().string()只能调用一次，多次调用会报错
+                            String responseData = response.body().string();
+                            JsonObject responseBodyJSONObject = (JsonObject) new JsonParser().parse(responseData);
+                            // 如果返回的status为success，代表获取验证码成功
+                            if (getResponseStatus(RegisterActivity.this, responseBodyJSONObject)) {
+                                Log.d(TAG, "验证码已发送，注意查收！");
+                            } else {
+                                getResponseData(RegisterActivity.this, responseBodyJSONObject);
+                            }
                         }
                     }
                 });
@@ -276,18 +283,25 @@ public class RegisterActivity extends AppCompatActivity
 
                         @Override
                         public void onResponse(Call call, Response response) throws IOException {
-                            // response.body().string()只能调用一次，多次调用会报错
-                            String responseBodyStr = response.body().string();
-                            JsonObject responseBodyJSONObject = (JsonObject) new JsonParser().parse(responseBodyStr);
-                            // 如果返回的status为success，代表验证通过
-                            if ( getResponseStatus(RegisterActivity.this, responseBodyJSONObject) ){
-                                Intent it_register_to_main = new Intent(RegisterActivity.this,MainActivity.class);
-                                it_register_to_main.putExtra("telphone",telphone);
-                                startActivity(it_register_to_main);
-                                // 注册成功后，注册界面就没必要占据资源了
-                                finish();
+                            // 先判断一下服务器是否异常
+                            String responseStr = response.toString();
+                            if (responseStr.contains("404") || responseStr.contains("500")) {
+                                Log.d(TAG, "服务器异常");
+                                showToastInThread(RegisterActivity.this, responseStr);
                             } else {
-                                getResponseData(RegisterActivity.this, responseBodyJSONObject);
+                                // response.body().string()只能调用一次，多次调用会报错
+                                String responseBodyStr = response.body().string();
+                                JsonObject responseBodyJSONObject = (JsonObject) new JsonParser().parse(responseBodyStr);
+                                // 如果返回的status为success，代表验证通过
+                                if (getResponseStatus(RegisterActivity.this, responseBodyJSONObject)) {
+                                    Intent it_register_to_main = new Intent(RegisterActivity.this, MainActivity.class);
+                                    it_register_to_main.putExtra("telphone", telphone);
+                                    startActivity(it_register_to_main);
+                                    // 注册成功后，注册界面就没必要占据资源了
+                                    finish();
+                                } else {
+                                    getResponseData(RegisterActivity.this, responseBodyJSONObject);
+                                }
                             }
                         }
                     });
