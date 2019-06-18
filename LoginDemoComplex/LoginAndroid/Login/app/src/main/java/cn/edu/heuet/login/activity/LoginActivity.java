@@ -82,29 +82,6 @@ public class LoginActivity extends AppCompatActivity
          */
         setOnFocusChangeErrMsg(et_account, "phone", "手机号格式不正确");
         setOnFocusChangeErrMsg(et_password, "password", "密码必须不少于6位");
-
-        /*
-          创建一个sp对象
-          这种语法很奇怪，上来啥也没有就是get
-          相当于声明了一个小型数据库，名为login_info，模式是私有模式
-          私有模式应该是会对数据进行加密
-          这种小型数据库只能存放k,v键值对
-         */
-        sp = getSharedPreferences("login_info", MODE_PRIVATE);
-
-        // 获取token
-        token = sp.getString("token", null);
-
-        /*
-         首次打开时为null,登陆成功后，token会赋值
-         再次打开时token就 != null
-         */
-        if (token != null) {
-            token_telphone = sp.getString("telphone", "");
-            token_password = sp.getString("password", "");
-            // 异步登录
-            asyncValidate(token_telphone, token_password);
-        }
     }
 
     // 全屏显示
@@ -307,6 +284,7 @@ public class LoginActivity extends AppCompatActivity
                              这里的telphone和password每次都要重写的
                              否则无法实现修改密码
                             */
+                                sp = getSharedPreferences("login_info", MODE_PRIVATE);
                                 editor = sp.edit();
                                 editor.putString("token", "token_value");
                                 editor.putString("telphone", telphone);
