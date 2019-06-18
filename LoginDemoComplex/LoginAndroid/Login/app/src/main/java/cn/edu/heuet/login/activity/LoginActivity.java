@@ -1,13 +1,14 @@
-package cn.edu.heuet.login;
+package cn.edu.heuet.login.activity;
 
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.text.TextUtils;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -17,29 +18,28 @@ import android.widget.Toast;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
-
 import java.io.IOException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import cn.edu.heuet.login.common.Common;
+import cn.edu.heuet.login.R;
+import cn.edu.heuet.login.constant.NetConstant;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.FormBody;
-import okhttp3.Headers;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
 public class LoginActivity extends AppCompatActivity
-        implements View.OnClickListener, Common {
+        implements View.OnClickListener {
 
     // 声明UI对象
     Button bt_login = null;
     EditText et_account = null;
     EditText et_password = null;
-    TextView tv_register = null;
+    TextView tv_to_register = null;
     TextView tv_forget_password = null;
     TextView tv_service_agreement = null;
     ImageView iv_third_method1 = null;
@@ -50,11 +50,14 @@ public class LoginActivity extends AppCompatActivity
     SharedPreferences sp;
     // 声明SharedPreferences编辑器对象
     SharedPreferences.Editor editor;
-    // 声明并初始化token
-    String token = null;
+    // 声明token
+    private String token;
+    private String token_telphone;
+    private String token_password;
 
     // Log打印的通用Tag
     private final String TAG = "LoginActivity";
+
 
     /*
         为了避免onCreate方法体看起来过于庞大
@@ -64,6 +67,7 @@ public class LoginActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        fullScreenConfig();
         setContentView(R.layout.activity_login);
         // 初始化UI对象
         initUI();
@@ -76,8 +80,8 @@ public class LoginActivity extends AppCompatActivity
             第二个参数指明输入数据类型
             第三个参数指明输入不合法时提示信息
          */
-        setOnFocusChangeErrMsg(et_account,"phone","手机号格式不正确");
-        setOnFocusChangeErrMsg(et_password,"password","密码必须不少于6位");
+        setOnFocusChangeErrMsg(et_account, "phone", "手机号格式不正确");
+        setOnFocusChangeErrMsg(et_password, "password", "密码必须不少于6位");
 
         /*
           创建一个sp对象
@@ -86,69 +90,68 @@ public class LoginActivity extends AppCompatActivity
           私有模式应该是会对数据进行加密
           这种小型数据库只能存放k,v键值对
          */
-        sp = getSharedPreferences("login_info",MODE_PRIVATE);
+        sp = getSharedPreferences("login_info", MODE_PRIVATE);
+
+        // 获取token
+        token = sp.getString("token", null);
 
         /*
-          这里只是token自动登录的原理，真实用法比这个复杂一些
-          第一次登陆时，token为null，在最上面有初始化
-          第二次登录时，token就会有值了
-        */
-        token = sp.getString("token",null);
-
-        /*
-         要想实现自动登录，最好还是再有个splash启动界面，
-         就像微信启动页是个地球一样，
-         应该在splash界面进行判断，而不是login界面
+         首次打开时为null,登陆成功后，token会赋值
+         再次打开时token就 != null
          */
-        if (token != null){
-            /*
-              为了让登录成功后，界面有点东西
-              我把输入的手机号传过去了
-              正好可以练习一下Intent在不同Activity之间传参的知识点
-             */
-            String telphone = sp.getString("telphone",null);
-            Intent it_login_to_main = new Intent(LoginActivity.this,MainActivity.class);
-            it_login_to_main.putExtra("telphone",telphone);
-            startActivity(it_login_to_main);
-            // 登录成功后，登录界面就没必要占据资源了
-            finish();
+        if (token != null) {
+            token_telphone = sp.getString("telphone", "");
+            token_password = sp.getString("password", "");
+            // 异步登录
+            asyncValidate(token_telphone, token_password);
         }
     }
 
+    // 全屏显示
+    private void fullScreenConfig() {
+        // 去除ActionBar(因使用的是NoActionBar的主题，故此句有无皆可)
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        // 去除状态栏，如 电量、Wifi信号等
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
+    }
+
+
     // 初始化UI对象
-    private void initUI(){
+    private void initUI() {
         bt_login = findViewById(R.id.bt_login); // 登录按钮
         et_account = findViewById(R.id.et_account); // 输入账号
         et_password = findViewById(R.id.et_password); // 输入密码
-        tv_register = findViewById(R.id.tv_register); // 注册
+        tv_to_register = findViewById(R.id.tv_to_register); // 注册
         tv_forget_password = findViewById(R.id.tv_forget_password); // 忘记密码
         tv_service_agreement = findViewById(R.id.tv_service_agreement); // 同意协议
         iv_third_method1 = findViewById(R.id.iv_third_method1); // 第三方登录方式1
         iv_third_method2 = findViewById(R.id.iv_third_method2); // 第三方登录方式2
         iv_third_method3 = findViewById(R.id.iv_third_method3); // 第三方登录方式3
     }
+
     /*
     当输入账号FocusChange时，校验账号是否是中国大陆手机号
     当输入密码FocusChange时，校验密码是否不少于6位
      */
-    private void setOnFocusChangeErrMsg(EditText editText,String inputType, String errMsg){
+    private void setOnFocusChangeErrMsg(EditText editText, String inputType, String errMsg) {
         editText.setOnFocusChangeListener(
                 new View.OnFocusChangeListener() {
                     @Override
                     public void onFocusChange(View v, boolean hasFocus) {
                         String inputStr = editText.getText().toString();
-                        if (!hasFocus){
-                            if(inputType == "phone"){
-                                if (isTelphoneValid(inputStr)){
+                        if (!hasFocus) {
+                            if (inputType == "phone") {
+                                if (isTelphoneValid(inputStr)) {
                                     editText.setError(null);
-                                }else {
+                                } else {
                                     editText.setError(errMsg);
                                 }
                             }
-                            if (inputType == "password"){
-                                if (isPasswordValid(inputStr)){
+                            if (inputType == "password") {
+                                if (isPasswordValid(inputStr)) {
                                     editText.setError(null);
-                                }else {
+                                } else {
                                     editText.setError(errMsg);
                                 }
                             }
@@ -177,9 +180,9 @@ public class LoginActivity extends AppCompatActivity
 
 
     // 为点击事件的UI对象设置监听器
-    private void setOnClickListener(){
+    private void setOnClickListener() {
         bt_login.setOnClickListener(this); // 登录按钮
-        tv_register.setOnClickListener(this); // 注册文字
+        tv_to_register.setOnClickListener(this); // 注册文字
         tv_forget_password.setOnClickListener(this); // 忘记密码文字
         tv_service_agreement.setOnClickListener(this); // 同意协议文字
         iv_third_method1.setOnClickListener(this); // 第三方登录方式1
@@ -194,13 +197,13 @@ public class LoginActivity extends AppCompatActivity
         String account = et_account.getText().toString();
         String password = et_password.getText().toString();
 
-        switch (v.getId()){
+        switch (v.getId()) {
             // 登录按钮 响应事件
             case R.id.bt_login:
                 // 让密码输入框失去焦点,触发setOnFocusChangeErrMsg方法
                 et_password.clearFocus();
                 // 发送URL请求之前,先进行校验
-                if (!(isTelphoneValid(account) && isPasswordValid(password))){
+                if (!(isTelphoneValid(account) && isPasswordValid(password))) {
                     Toast.makeText(this, "账号或密码错误", Toast.LENGTH_SHORT).show();
                     break;
                 }
@@ -208,17 +211,17 @@ public class LoginActivity extends AppCompatActivity
                    因为验证是耗时操作，所以独立成方法
                    在方法中开辟子线程，避免在当前UI线程进行耗时操作
                 */
-                asyncValidate(account,password);
+                asyncValidate(account, password);
                 break;
             // 注册用户 响应事件
-            case R.id.tv_register:
+            case R.id.tv_to_register:
                 /*
                   关于这里传参说明：给用户一个良好的体验，
                   如果在登录界面填写过的，就不需要再填了
                   所以Intent把填写过的数据传递给注册界面
                  */
                 Intent it_login_to_register = new Intent(this, RegisterActivity.class);
-                it_login_to_register.putExtra("account",account);
+                it_login_to_register.putExtra("account", account);
                 startActivity(it_login_to_register);
                 break;
 
@@ -245,17 +248,18 @@ public class LoginActivity extends AppCompatActivity
                 break;
         }
     }
+
     /*
       okhttp异步POST请求 要求API level 21+
       account 本来想的是可以是 telphone或者username
       但目前只实现了telphone
      */
-    private void asyncValidate(final String account, final String password){
+    private void asyncValidate(final String account, final String password) {
         /*
          发送请求属于耗时操作，所以开辟子线程执行
          上面的参数都加上了final，否则无法传递到子线程中
         */
-        new Thread( new Runnable() {
+        new Thread(new Runnable() {
             @Override
             public void run() {
                 // okhttp异步POST请求； 总共5步
@@ -269,26 +273,23 @@ public class LoginActivity extends AppCompatActivity
                         .build();
                 // 3、发送请求，因为要传密码，所以用POST方式
                 Request request = new Request.Builder()
-                        .url(loginURL)
+                        .url(NetConstant.getLoginURL())
                         .post(requestBody)
                         .build();
                 // 4、使用okhttpClient对象获取请求的回调方法，enqueue()方法代表异步执行
-                okHttpClient.newCall(request).enqueue( new Callback() {
+                okHttpClient.newCall(request).enqueue(new Callback() {
                     // 5、重写两个回调方法
                     @Override
                     public void onFailure(Call call, IOException e) {
                         Log.d(TAG, "请求URL失败： " + e.getMessage());
-                        showToastInThread(LoginActivity.this,"请求URL失败, 请重试！");
+                        showToastInThread(LoginActivity.this, "请求URL失败, 请重试！");
                     }
 
                     @Override
                     public void onResponse(Call call, Response response) throws IOException {
                         // 先判断一下服务器是否异常
                         String responseStr = response.toString();
-                        if (responseStr.contains("404") || responseStr.contains("500")) {
-                            Log.d(TAG,"服务器异常");
-                            showToastInThread(LoginActivity.this, responseStr);
-                        } else {
+                        if (responseStr.contains("200")) {
                              /*
                             注意这里，同一个方法内
                             response.body().string()只能调用一次，多次调用会报错
@@ -298,18 +299,20 @@ public class LoginActivity extends AppCompatActivity
                             /* 使用Gson解析response的JSON数据的第二步 */
                             JsonObject responseBodyJSONObject = (JsonObject) new JsonParser().parse(responseBodyStr);
                             // 如果返回的status为success，则getStatus返回true，登录验证通过
-                            if (getStatus(LoginActivity.this, responseBodyJSONObject)) {
+                            if (getStatus(responseBodyJSONObject).equals("success")) {
                             /*
                              更新token，下次自动登录
                              真实的token值应该是一个加密字符串
                              我为了让token不为null，就随便传了一个字符串
+                             这里的telphone和password每次都要重写的
+                             否则无法实现修改密码
                             */
                                 editor = sp.edit();
                                 editor.putString("token", "token_value");
                                 editor.putString("telphone", telphone);
+                                editor.putString("password", password);
                                 if (editor.commit()) {
                                     Intent it_login_to_main = new Intent(LoginActivity.this, MainActivity.class);
-                                    it_login_to_main.putExtra("telphone", telphone);
                                     startActivity(it_login_to_main);
                                     // 登录成功后，登录界面就没必要占据资源了
                                     finish();
@@ -317,9 +320,12 @@ public class LoginActivity extends AppCompatActivity
                                     showToastInThread(LoginActivity.this, "token保存失败，请重新登录");
                                 }
                             } else {
-                                getResponseData(LoginActivity.this, responseBodyJSONObject);
+                                getResponseErrMsg(LoginActivity.this, responseBodyJSONObject);
                                 Log.d(TAG, "账号或密码验证失败");
                             }
+                        } else {
+                            Log.d(TAG, "服务器异常");
+                            showToastInThread(LoginActivity.this, responseStr);
                         }
                     }
                 });
@@ -332,30 +338,30 @@ public class LoginActivity extends AppCompatActivity
       使用Gson解析response的JSON数据
       本来总共是有三步的，一、二步在方法调用之前执行了
     */
-    private boolean getStatus(Context context, JsonObject responseBodyJSONObject)throws IOException {
+    private String getStatus(JsonObject responseBodyJSONObject) {
         /* 使用Gson解析response的JSON数据的第三步
            通过JSON对象获取对应的属性值 */
         String status = responseBodyJSONObject.get("status").getAsString();
         // 登录成功返回的json为{ "status":"success", "data":null }
         // 只获取status即可，data为null
-        return status.equals("success");
+        return status;
     }
 
     /*
       使用Gson解析response返回异常信息的JSON中的data对象
       这也属于第三步，一、二步在方法调用之前执行了
      */
-    private void getResponseData(Context context, JsonObject responseBodyJSONObject){
+    private void getResponseErrMsg(Context context, JsonObject responseBodyJSONObject) {
         JsonObject dataObject = responseBodyJSONObject.get("data").getAsJsonObject();
         String errorCode = dataObject.get("errorCode").getAsString();
         String errorMsg = dataObject.get("errorMsg").getAsString();
-        Log.d(TAG,"errorCode: "+errorCode+" errorMsg: "+errorMsg);
+        Log.d(TAG, "errorCode: " + errorCode + " errorMsg: " + errorMsg);
         // 在子线程中显示Toast
-        showToastInThread(context,errorMsg);
+        showToastInThread(context, errorMsg);
     }
 
     // 实现在子线程中显示Toast
-    private void showToastInThread(Context context,String msg){
+    private void showToastInThread(Context context, String msg) {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -363,16 +369,6 @@ public class LoginActivity extends AppCompatActivity
             }
         });
     }
-
-
-
-
-
-
-
-
-
-
 
 
     // 以下是我尝试过的一些失败的方法
