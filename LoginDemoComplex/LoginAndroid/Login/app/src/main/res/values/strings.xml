@@ -1,3 +1,33 @@
 <resources>
     <string name="app_name">Login</string>
+    <string name="account">account</string>
+    <string name="plesase_input_account">plesase input account</string>
+    <string name="login">Login</string>
+    <string name="forget_password">forget password</string>
+    <string name="password">password</string>
+    <string name="plesase_input_password">plesase input password</string>
+    <string name="go_to_registe">go to registe</string>
+    <string name="third_method_login"> third method login</string>
+    <string name="if_login_is_meaning_to_geree">if login is meaning to geree </string>
+    <string name="the_service">the service</string>
+    <string name="iv_third_method1">iv_third_method1</string>
+    <string name="iv_third_method2">iv_third_method2</string>
+    <string name="iv_third_method3">iv_third_method3</string>
+    <string name="iv_project_icon">iv_project_icon</string>
+    <string name="tv_register">user registe</string>
+    <string name="tv_phone">phone</string>
+    <string name="et_phone">please input phone</string>
+    <string name="bt_get_code">get code</string>
+    <string name="tv_code">code</string>
+    <string name="et_code">please input code</string>
+    <string name="tv_name">name</string>
+    <string name="et_name">please input name</string>
+    <string name="tv_gender">gender</string>
+    <string name="et_gender">1 is man 2 is woman</string>
+    <string name="tv_age">age</string>
+    <string name="et_age">please input age</string>
+    <string name="tv_password">password</string>
+    <string name="et_password">please input password</string>
+    <string name="et_password2">please input password again</string>
+    <string name="bt_register">submit</string>
 </resources>

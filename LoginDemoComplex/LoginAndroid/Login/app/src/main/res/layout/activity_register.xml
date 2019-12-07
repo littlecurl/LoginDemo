@@ -16,7 +16,7 @@
             android:id="@+id/ll_top"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="32dp"
+            android:layout_marginStart="32dp"
             android:orientation="vertical">
 
             <TextView
@@ -24,7 +24,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="32dp"
-                android:text="用户注册"
+                android:text="@string/tv_register"
                 android:textStyle="bold" />
 
             <TextView
@@ -32,14 +32,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="32dp"
-                android:text="手机号" />
+                android:text="@string/tv_phone" />
         </LinearLayout>
 
         <LinearLayout
             android:id="@+id/ll_middle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="32dp"
+            android:layout_marginStart="32dp"
             android:orientation="horizontal">
 
             <EditText
@@ -48,10 +48,11 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
                 android:ems="10"
-                android:hint="请输入手机号"
+                android:hint="@string/et_phone"
                 android:inputType="phone"
                 android:maxLength="11"
-                android:singleLine="true" />
+                android:singleLine="true"
+                android:autofillHints="" tools:targetApi="o" />
 
             <Button
                 android:id="@+id/bt_get_otp"
@@ -59,14 +60,14 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:layout_marginBottom="8dp"
-                android:text="获取验证码" />
+                android:text="@string/bt_get_code" />
         </LinearLayout>
 
         <LinearLayout
             android:id="@+id/ll_bottom"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="32dp"
+            android:layout_marginStart="32dp"
             android:orientation="vertical">
 
             <TextView
@@ -74,7 +75,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:text="验证码" />
+                android:text="@string/tv_code" />
 
             <EditText
                 android:id="@+id/et_otpCode"
@@ -82,17 +83,18 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
                 android:ems="10"
-                android:hint="请输入验证码"
+                android:hint="@string/et_code"
                 android:inputType="number"
                 android:maxLength="6"
-                android:singleLine="true" />
+                android:singleLine="true"
+                android:autofillHints="" tools:targetApi="o" />
 
             <TextView
                 android:id="@+id/tv_usernaem"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:text="昵称" />
+                android:text="@string/tv_name" />
 
             <EditText
                 android:id="@+id/et_username"
@@ -100,16 +102,17 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
                 android:ems="10"
-                android:hint="请输入用户昵称"
+                android:hint="@string/et_name"
                 android:inputType="textPersonName"
-                android:singleLine="true" />
+                android:singleLine="true"
+                android:autofillHints="" tools:targetApi="o" />
 
             <TextView
                 android:id="@+id/tv_gender"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:text="性别" />
+                android:text="@string/tv_gender" />
 
             <EditText
                 android:id="@+id/et_gender"
@@ -117,17 +120,18 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
                 android:ems="10"
-                android:hint="1代表男性 2代表女性"
+                android:hint="@string/et_gender"
                 android:inputType="number"
                 android:maxLength="1"
-                android:singleLine="true" />
+                android:singleLine="true"
+                android:autofillHints="" tools:targetApi="o" />
 
             <TextView
                 android:id="@+id/tv_age"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:text="年龄" />
+                android:text="@string/tv_age" />
 
             <EditText
                 android:id="@+id/et_age"
@@ -135,17 +139,18 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
                 android:ems="10"
-                android:hint="请输入年龄"
+                android:hint="@string/et_age"
                 android:inputType="number"
                 android:maxLength="3"
-                android:singleLine="true" />
+                android:singleLine="true"
+                android:autofillHints="" tools:targetApi="o" />
 
             <TextView
                 android:id="@+id/tv_password"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:text="密码" />
+                android:text="@string/tv_password" />
 
             <EditText
                 android:id="@+id/et_password"
@@ -153,10 +158,11 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
                 android:ems="10"
-                android:hint="请输入密码"
+                android:hint="@string/et_password"
                 android:inputType="textPassword"
                 android:singleLine="true"
-                android:selectAllOnFocus="true"/>
+                android:selectAllOnFocus="true"
+                android:autofillHints="" tools:targetApi="o" />
 
             <EditText
                 android:id="@+id/et_password2"
@@ -164,10 +170,11 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
                 android:ems="10"
-                android:hint="请再次输入密码"
+                android:hint="@string/et_password2"
                 android:inputType="textPassword"
                 android:singleLine="true"
-                android:selectAllOnFocus="true"/>
+                android:selectAllOnFocus="true"
+                android:autofillHints="" tools:targetApi="o" />
 
             <Button
                 android:id="@+id/bt_submit_register"
@@ -175,7 +182,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
                 android:layout_marginBottom="32dp"
-                android:text="提交注册" />
+                android:text="@string/bt_register" />
         </LinearLayout>
     </LinearLayout>
 </ScrollView>

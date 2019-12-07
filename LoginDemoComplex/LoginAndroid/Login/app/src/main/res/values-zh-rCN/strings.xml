@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">登录注册复杂版</string>
+    <string name="iv_project_icon">项目图标</string>
+    <string name="account">账号</string>
+    <string name="plesase_input_account">请输入账号</string>
+    <string name="password">密码</string>
+    <string name="plesase_input_password">请输入密码</string>
+    <string name="login">登录</string>
+    <string name="forget_password">忘记密码</string>
+    <string name="go_to_registe">注册</string>
+    <string name="if_login_is_meaning_to_geree">登录即代表同意 </string>
+    <string name="the_service"> 用户协议</string>
+    <string name="third_method_login">第三方登录</string>
+    <string name="iv_third_method1">第三方登录方式一</string>
+    <string name="iv_third_method2">第三方登录方式二</string>
+    <string name="iv_third_method3">第三方登录方式三</string>
+    <string name="tv_register">用户注册</string>
+    <string name="tv_phone">手机号</string>
+    <string name="et_phone">请输入手机号</string>
+    <string name="bt_get_code">获取验证码</string>
+    <string name="tv_code">验证码</string>
+    <string name="et_code">请输入验证码</string>
+    <string name="tv_name">昵称</string>
+    <string name="et_name">请输入用户昵称</string>
+    <string name="tv_gender">性别</string>
+    <string name="et_gender">1代表男性 2代表女性</string>
+    <string name="tv_age">年龄</string>
+    <string name="et_age">请输入年龄</string>
+    <string name="tv_password">密码</string>
+    <string name="et_password">请输入密码</string>
+    <string name="et_password2">请再次输入密码</string>
+    <string name="bt_register">提交注册</string>
+</resources>
