@@ -1,7 +1,8 @@
-测试版README，待完善......
-
--------
 ## 前言
+
+BiliBili视频地址：[https://www.bilibili.com/video/BV1Ly4y1k7Po/](https://www.bilibili.com/video/BV1Ly4y1k7Po/)
+
+
 ### 实现效果如下
 ![登录注册实现图](https://img-blog.csdnimg.cn/20190608012517767.gif)
 
@@ -341,7 +342,9 @@ private void setTextInThread(EditText editText,String otpCode){
 3. 实现分布式Session
 4. ......
 
+#### 十、视频地址
 
+​	[https://www.bilibili.com/video/BV1Ly4y1k7Po/](https://www.bilibili.com/video/BV1Ly4y1k7Po/)
 
 
 
