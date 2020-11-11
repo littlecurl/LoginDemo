@@ -16,28 +16,32 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import javax.xml.validation.Validator;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 /* @Service标注加在具体的Service实现类上 */
 @Service
 public class UserServiceImpl implements UserService  {
-    /*
-    Controller层接收View层传来的参数，
-    将参数转给Service层
-    Service层再调用DAO层访问数据
-    Service层再将DAO层返回给Controller层
-    Controller层将Service层返回传递给View层
-    */
+    /**
+     * Controller层接收View层传来的参数，
+     *     将参数转给Service层
+     *     Service层再调用DAO层访问数据
+     *     Service层再将DAO层返回给Controller层
+     *     Controller层将Service层返回传递给View层
+     */
     @Autowired
-    private UserDOMapper userDOMapper; // 如果编译器在这里显红线，可以忽略
+    private UserDOMapper userDOMapper;
 
-    /* 每一个需要自动注入的对象都需要加@Autowired注解 */
+    /**
+     * 每一个需要自动注入的对象都需要加@Autowired注解
+     */
     @Autowired
-    private UserPasswordDOMapper userPasswordDOMapper; // 如果编译器在这里显红线，可以忽略
+    private UserPasswordDOMapper userPasswordDOMapper;
 
     @Autowired
     private ValidatorImpl validator;
+
+    public UserServiceImpl() {
+    }
 
 
     @Override
@@ -59,15 +63,17 @@ public class UserServiceImpl implements UserService  {
         UserPasswordDO userPasswordDO = userPasswordDOMapper.selectByUserId(userDO.getId());
 
         /* 调用方法，整合UserDO和UserPasswordDO为userModel并返回给Controller */
-        return converFromDataObject(userDO, userPasswordDO);
+        return convertFromDataObject(userDO, userPasswordDO);
     }
 
-    /*
-    用户获取验证码时，检测是否已存在注册用户
+    /**
+     * 用户获取验证码时，检测是否已存在注册用户
+     * @param telephone 用户手机号
+     * @return 是否存在当前手机号的用户
      */
     @Override
-    public Boolean getUserByTelphone(String telphone) {
-        UserDO userDO = userDOMapper.selectByTelphone(telphone);
+    public Boolean getUserByTelephone(String telephone) {
+        UserDO userDO = userDOMapper.selectByTelephone(telephone);
         if (userDO == null){
             return  false;
         } else {
@@ -76,7 +82,7 @@ public class UserServiceImpl implements UserService  {
     }
 
     /* 整合业务需要的所有属性为UserModel，这里为两张表的所有属性 */
-    private UserModel converFromDataObject(UserDO userDO, UserPasswordDO userPasswordDO){
+    private UserModel convertFromDataObject(UserDO userDO, UserPasswordDO userPasswordDO){
         /* UserDO的判空处理 */
         if (userDO == null){ return null; }
         UserModel userModel = new UserModel();
@@ -94,9 +100,11 @@ public class UserServiceImpl implements UserService  {
         return userModel;
     }
 
-    /*
-     用户注册服务的实现
-     加上@Transactional注解是为了避免出现用户信息插入不全，程序意外结束
+    /**
+     * 用户注册服务的实现
+     * 加上@Transactional注解是为了避免出现用户信息插入不全，程序意外结束
+     *
+     * @param userModel 用户信息
      */
     @Override
     @Transactional
@@ -118,6 +126,8 @@ public class UserServiceImpl implements UserService  {
         try {
             userDOMapper.insertSelective(userDO);
         }catch (DuplicateKeyException ex){
+            // 手动回滚事务
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
             throw new BusinessException(EmBusinessError.PARAMETER_VALIDATION_ERROR,"手机号已重复注册");
         }
         /*
@@ -128,10 +138,16 @@ public class UserServiceImpl implements UserService  {
         userModel.setId(userDO.getId());
 
         // model --->  dataobject:UserPasswordDO
-        UserPasswordDO userPasswordDO = convertPasswoedFromModel(userModel);
+        UserPasswordDO userPasswordDO = convertPasswordFromModel(userModel);
         userPasswordDOMapper.insertSelective(userPasswordDO);
     }
-    // 实现model --->  dataobject:UserDO
+
+    /**
+     * 实现model --->  dataobject:UserDO
+     *
+     * @param userModel Model
+     * @return UserDO
+     */
     private UserDO convertFromModel(UserModel userModel){
         // 每一层都进行判空，这样代码才处处健壮
         if(userModel == null){
@@ -144,8 +160,14 @@ public class UserServiceImpl implements UserService  {
 
         return userDO;
     }
-    // 实现model --->  dataobject:UserPasswordDO
-    private UserPasswordDO convertPasswoedFromModel(UserModel userModel){
+
+    /**
+     * 实现model --->  dataobject:UserDO
+     *
+     * @param userModel Model
+     * @return UserDO
+     */
+    private UserPasswordDO convertPasswordFromModel(UserModel userModel){
         if (userModel == null){
             return  null;
         }
@@ -167,19 +189,23 @@ public class UserServiceImpl implements UserService  {
         return userPasswordDO;
     }
 
-    /*
-    用户登录服务的实现
+    /**
+     * 用户登录服务的实现
+     *
+     * @param telphone 手机号
+     * @param encryptPassword 加密密码
+     * @return 用户Model
      */
     @Override
     public UserModel validateLogin(String telphone, String encryptPassword) throws BusinessException {
         // 通过用户的手机获取用户信息
         /* 这里的selectByTelphone是我们在UserDOMapper.xml中手动实现的 */
-        UserDO userDO = userDOMapper.selectByTelphone(telphone);
+        UserDO userDO = userDOMapper.selectByTelephone(telphone);
         if (userDO == null){
             throw new BusinessException(EmBusinessError.USER_LOGIN_FAIL);
         }
         UserPasswordDO userPasswordDO = userPasswordDOMapper.selectByUserId(userDO.getId());
-        UserModel userModel = converFromDataObject(userDO, userPasswordDO);
+        UserModel userModel = convertFromDataObject(userDO, userPasswordDO);
 
         // 比对用户信息内加密的面是否和传输进来的密码相匹配
         if (!StringUtils.equals(encryptPassword,userModel.getEncryptPassword())){

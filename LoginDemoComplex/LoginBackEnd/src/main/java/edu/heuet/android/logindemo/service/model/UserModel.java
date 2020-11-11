@@ -5,10 +5,10 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
-/*
-因为业务需要，有些字段并不能在同一张表里
-model层就是整合业务需要的所有字段
-*/
+/**
+ * 因为业务需要，有些字段并不能在同一张表里
+ * model层就是整合业务需要的所有字段
+ */
 public class UserModel {
     private Integer id;
     @NotBlank(message = "用户名不能为空")
@@ -20,7 +20,7 @@ public class UserModel {
     @Max(value = 150, message = "年龄必须小于150")
     private Integer age;
     @NotNull(message = "手机号不能为空")
-    private String telphone;
+    private String telephone;
     private String registerMode;
     private String thirdPartId;
     /* 整合加密后的密码字段 */
@@ -59,12 +59,12 @@ public class UserModel {
         this.age = age;
     }
 
-    public String getTelphone() {
-        return telphone;
+    public String getTelephone() {
+        return telephone;
     }
 
-    public void setTelphone(String telphone) {
-        this.telphone = telphone;
+    public void setTelephone(String telephone) {
+        this.telephone = telephone;
     }
 
     public String getRegisterMode() {

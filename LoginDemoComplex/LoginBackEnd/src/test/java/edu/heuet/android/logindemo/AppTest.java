@@ -17,4 +17,20 @@ public class AppTest
     {
         assertTrue( true );
     }
+
+    @Test
+    public void test(){
+       System.out.println(countsOfOne(7));
+    }
+
+    int countsOfOne(int number)
+    {
+        int counts = 0;
+        while (number != 0)
+        {
+            counts++;
+            number = number & (number - 1);
+        }
+        return counts;
+    }
 }

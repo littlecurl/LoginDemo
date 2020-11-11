@@ -28,17 +28,23 @@
             <property name="enableSubPackages" value="true" />
         </javaClientGenerator>
         <!-- 生成mysql对应表的类名 -->
-        <table tableName="user_info" domainObjectName="UserDO"
-                enableCountByExample="false"
-                enableUpdateByExample="false"
-                enableDeleteByExample="false"
-                enableSelectByExample="false"
-                selectByExampleQueryId="false"/>
-        <table tableName="user_password" domainObjectName="UserPasswordDO"
+        <!--<table tableName="user_info" domainObjectName="UserDO"-->
+                <!--enableCountByExample="false"-->
+                <!--enableUpdateByExample="false"-->
+                <!--enableDeleteByExample="false"-->
+                <!--enableSelectByExample="false"-->
+                <!--selectByExampleQueryId="false"/>-->
+        <table tableName="news_info" domainObjectName="NewsDO"
                enableCountByExample="false"
                enableUpdateByExample="false"
                enableDeleteByExample="false"
                enableSelectByExample="false"
                selectByExampleQueryId="false"/>
+        <!--<table tableName="user_password" domainObjectName="UserPasswordDO"-->
+               <!--enableCountByExample="false"-->
+               <!--enableUpdateByExample="false"-->
+               <!--enableDeleteByExample="false"-->
+               <!--enableSelectByExample="false"-->
+               <!--selectByExampleQueryId="false"/>-->
     </context>
 </generatorConfiguration>

@@ -18,27 +18,27 @@ public enum EmBusinessError implements CommonError{
     USER_LOGIN_FAIL(20002,"用户手机号或密码不正确")
     ;
 
-    private int errorCode;
-    private String errorMsg;
+    private int code;
+    private String msg;
 
-    EmBusinessError(int errorCode, String errorMsg) {
-        this.errorCode = errorCode;
-        this.errorMsg = errorMsg;
+    EmBusinessError(int errorCode, String msg) {
+        this.code = errorCode;
+        this.msg = msg;
     }
 
     @Override
-    public int getErrorCode() {
-        return errorCode;
+    public int getCode() {
+        return code;
     }
 
     @Override
-    public String getErrorMsg() {
-        return errorMsg;
+    public String getMsg() {
+        return msg;
     }
 
     @Override
-    public CommonError setErrorMsg(String errorMsg) {
-        this.errorMsg = errorMsg;
+    public CommonError setMsg(String errorMsg) {
+        this.msg = errorMsg;
         return this;
     }
 }

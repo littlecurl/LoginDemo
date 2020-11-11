@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent="0.25" />
+
+        <ImageView
+            android:id="@+id/iv_project_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/iv_project_icon"
+            app:layout_constraintBottom_toTopOf="@+id/guideline"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@mipmap/ic_launcher" />
+
+        <TextView
+            android:id="@+id/tv_account"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/account"
+            app:layout_constraintBottom_toTopOf="@+id/guideline2"
+            app:layout_constraintEnd_toStartOf="@+id/et_account"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/guideline"
+            app:layout_constraintVertical_bias="0.2" />
+
+        <EditText
+            android:id="@+id/et_account"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:autofillHints=""
+            android:ems="10"
+            android:hint="@string/plesase_input_account"
+            android:inputType="textPersonName"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_account"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/tv_account"
+            app:layout_constraintVertical_bias="0.384"
+            tools:targetApi="o" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent="0.6" />
+
+        <TextView
+            android:id="@+id/tv_password"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/password"
+            app:layout_constraintBottom_toTopOf="@+id/guideline2"
+            app:layout_constraintEnd_toStartOf="@+id/et_password"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_account"
+            app:layout_constraintVertical_bias="0.266" />
+
+        <EditText
+            android:id="@+id/et_password"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:autofillHints=""
+            android:ems="10"
+            android:hint="@string/plesase_input_password"
+            android:inputType="textPassword"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_password"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/tv_password"
+            tools:targetApi="o" />
+
+        <Button
+            android:id="@+id/bt_login"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:text="@string/login"
+            app:layout_constraintBottom_toTopOf="@+id/guideline2"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/et_password" />
+
+        <View
+            android:id="@+id/tv_vertical_line"
+            android:layout_width="1dp"
+            android:layout_height="20dp"
+            android:background="?android:attr/listDivider"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_forget_password"
+            app:layout_constraintEnd_toStartOf="@+id/tv_to_register"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/tv_forget_password"
+            app:layout_constraintTop_toTopOf="@+id/tv_forget_password"
+            app:layout_constraintVertical_bias="1.0" />
+
+        <TextView
+            android:id="@+id/tv_forget_password"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="44dp"
+            android:text="@string/forget_password"
+            app:layout_constraintEnd_toStartOf="@+id/tv_vertical_line"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/guideline2" />
+
+        <TextView
+            android:id="@+id/tv_to_register"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/go_to_registe"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_vertical_line"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/tv_vertical_line"
+            app:layout_constraintTop_toTopOf="@+id/tv_vertical_line"
+            app:layout_constraintVertical_bias="0.0" />
+
+        <TextView
+            android:id="@+id/tv_third_method"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/third_method_login"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_vertical_line"
+            app:layout_constraintVertical_bias="0.214" />
+
+        <ImageView
+            android:id="@+id/iv_third_method1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/iv_third_method1"
+            app:layout_constraintBottom_toBottomOf="@+id/iv_third_method2"
+            app:layout_constraintEnd_toStartOf="@+id/iv_third_method2"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/iv_third_method2"
+            app:layout_constraintVertical_bias="1.0"
+            app:srcCompat="@drawable/wechat" />
+
+        <ImageView
+            android:id="@+id/iv_third_method2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/iv_third_method2"
+            app:layout_constraintBottom_toBottomOf="@+id/iv_third_method3"
+            app:layout_constraintEnd_toStartOf="@+id/iv_third_method3"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/iv_third_method1"
+            app:layout_constraintTop_toTopOf="@+id/iv_third_method3"
+            app:layout_constraintVertical_bias="1.0"
+            app:srcCompat="@drawable/qq" />
+
+        <ImageView
+            android:id="@+id/iv_third_method3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/iv_third_method3"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/iv_third_method2"
+            app:layout_constraintTop_toBottomOf="@+id/tv_third_method"
+            app:layout_constraintVertical_bias="0.207"
+            app:srcCompat="@drawable/github" />
+
+        <TextView
+            android:id="@+id/tv_agree"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/if_login_is_meaning_to_geree"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.414"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/iv_third_method2"
+            app:layout_constraintVertical_bias="0.492" />
+
+        <TextView
+            android:id="@+id/tv_service_agreement"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/the_service"
+            android:textColor="#2196F3"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_agree"
+            app:layout_constraintStart_toEndOf="@+id/tv_agree"
+            app:layout_constraintTop_toTopOf="@+id/tv_agree"
+            app:layout_constraintVertical_bias="1.0" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

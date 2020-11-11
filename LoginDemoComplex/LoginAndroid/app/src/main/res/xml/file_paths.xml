@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<paths>
+    <root-path
+        name="root"
+        path="shaohua" />
+    <files-path
+        name="files"
+        path="shaohua" />
+    <cache-path
+        name="cache"
+        path="shaohua" />
+    <external-path
+        name="app_update_external"
+        path="/" />
+    <external-cache-path
+        name="app_update_cache"
+        path="/" />
+    <external-path
+        name="my_images"
+        path="Pictures" />
+</paths>

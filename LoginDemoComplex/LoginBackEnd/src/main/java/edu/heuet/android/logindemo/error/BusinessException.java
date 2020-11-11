@@ -22,22 +22,22 @@ public class BusinessException extends Exception implements CommonError {
     public BusinessException(CommonError commonError, String errorMsg){
         super();
         this.commonError = commonError;
-        this.commonError.setErrorMsg(errorMsg);
+        this.commonError.setMsg(errorMsg);
     }
 
     @Override
-    public int getErrorCode() {
-        return this.commonError.getErrorCode();
+    public int getCode() {
+        return this.commonError.getCode();
     }
 
     @Override
-    public String getErrorMsg() {
-        return this.commonError.getErrorMsg();
+    public String getMsg() {
+        return this.commonError.getMsg();
     }
 
     @Override
-    public CommonError setErrorMsg(String errorMsg) {
-        this.commonError.setErrorMsg(errorMsg);
+    public CommonError setMsg(String errorMsg) {
+        this.commonError.setMsg(errorMsg);
         return this;
     }
 }

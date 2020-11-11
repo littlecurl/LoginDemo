@@ -1,18 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="edu.heuet.android.logindemo.dao.UserDOMapper">
+
   <resultMap id="BaseResultMap" type="edu.heuet.android.logindemo.dataobject.UserDO">
-    <id column="id" jdbcType="INTEGER" property="id" />
+    <id     column="id" jdbcType="INTEGER" property="id" />
     <result column="name" jdbcType="VARCHAR" property="name" />
     <result column="gender" jdbcType="TINYINT" property="gender" />
     <result column="age" jdbcType="INTEGER" property="age" />
-    <result column="telphone" jdbcType="VARCHAR" property="telphone" />
+    <result column="telephone" jdbcType="VARCHAR" property="telephone" />
     <result column="register_mode" jdbcType="VARCHAR" property="registerMode" />
     <result column="third_part_id" jdbcType="VARCHAR" property="thirdPartId" />
   </resultMap>
+
   <sql id="Base_Column_List">
-    id, name, gender, age, telphone, register_mode, third_part_id
+    id, name, gender, age, telephone, register_mode, third_part_id
   </sql>
+
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select
     <include refid="Base_Column_List" />
@@ -20,11 +23,11 @@
     where id = #{id,jdbcType=INTEGER}
   </select>
 
-  <select id="selectByTelphone" resultMap="BaseResultMap">
+  <select id="selectByTelephone" resultMap="BaseResultMap">
     select
     <include refid="Base_Column_List" />
     from user_info
-    where telphone = #{telphone,jdbcType=VARCHAR}
+    where telephone = #{telephone,jdbcType=VARCHAR}
   </select>
 
 
@@ -36,10 +39,10 @@
 
   <insert id="insert" parameterType="edu.heuet.android.logindemo.dataobject.UserDO">
     insert into user_info (id, name, gender,
-      age, telphone, register_mode, 
+      age, telephone, register_mode, 
       third_part_id)
     values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{gender,jdbcType=TINYINT}, 
-      #{age,jdbcType=INTEGER}, #{telphone,jdbcType=VARCHAR}, #{registerMode,jdbcType=VARCHAR}, 
+      #{age,jdbcType=INTEGER}, #{telephone,jdbcType=VARCHAR}, #{registerMode,jdbcType=VARCHAR}, 
       #{thirdPartId,jdbcType=VARCHAR})
   </insert>
 
@@ -64,8 +67,8 @@
       <if test="age != null">
         age,
       </if>
-      <if test="telphone != null">
-        telphone,
+      <if test="telephone != null">
+        telephone,
       </if>
       <if test="registerMode != null">
         register_mode,
@@ -87,8 +90,8 @@
       <if test="age != null">
         #{age,jdbcType=INTEGER},
       </if>
-      <if test="telphone != null">
-        #{telphone,jdbcType=VARCHAR},
+      <if test="telephone != null">
+        #{telephone,jdbcType=VARCHAR},
       </if>
       <if test="registerMode != null">
         #{registerMode,jdbcType=VARCHAR},
@@ -112,8 +115,8 @@
       <if test="age != null">
         age = #{age,jdbcType=INTEGER},
       </if>
-      <if test="telphone != null">
-        telphone = #{telphone,jdbcType=VARCHAR},
+      <if test="telephone != null">
+        telephone = #{telephone,jdbcType=VARCHAR},
       </if>
       <if test="registerMode != null">
         register_mode = #{registerMode,jdbcType=VARCHAR},
@@ -131,7 +134,7 @@
     set name = #{name,jdbcType=VARCHAR},
       gender = #{gender,jdbcType=TINYINT},
       age = #{age,jdbcType=INTEGER},
-      telphone = #{telphone,jdbcType=VARCHAR},
+      telephone = #{telephone,jdbcType=VARCHAR},
       register_mode = #{registerMode,jdbcType=VARCHAR},
       third_part_id = #{thirdPartId,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}

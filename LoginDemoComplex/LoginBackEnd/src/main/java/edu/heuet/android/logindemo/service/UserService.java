@@ -13,7 +13,7 @@ public interface UserService {
     public UserModel getUserById(Integer id);
 
     /* 用户获取手机验证码时需要用到 */
-    public Boolean getUserByTelphone(String telphone);
+    public Boolean getUserByTelephone(String telephone);
 
     void register(UserModel userModel) throws BusinessException;
 
