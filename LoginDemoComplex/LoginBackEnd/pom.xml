@@ -4,11 +4,11 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-  <groupId>edu.heuet.android.logindemo</groupId>
-  <artifactId>login-backend</artifactId>
+  <groupId>edu.heuet.android.shaohua</groupId>
+  <artifactId>shaohua-backend</artifactId>
   <version>1.0</version>
 
-  <name>login-backend</name>
+  <name>shaohua-backend</name>
   <!-- FIXME change it to the project's website -->
   <url>http://www.example.com</url>
 
@@ -86,7 +86,11 @@
       <version>1.7.25</version>
       <!-- <scope>test</scope> -->
     </dependency>
-
+    <dependency>
+      <groupId>mysql</groupId>
+      <artifactId>mysql-connector-java</artifactId>
+      <version>8.0.21</version>
+    </dependency>
   </dependencies>
 
   <build>
@@ -155,7 +159,7 @@
             <dependency>
               <groupId>mysql</groupId>
               <artifactId>mysql-connector-java</artifactId>
-              <version>5.1.41</version>
+              <version>8.0.21</version>
             </dependency>
           </dependencies>
           <!-- executions : 执行-->

@@ -8,11 +8,13 @@
         <outputRelativeToContentRoot value="true" />
         <module name="login-backend" />
         <module name="loginserver" />
+        <module name="LoginBackEnd" />
       </profile>
     </annotationProcessing>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="LoginBackEnd" options="-parameters" />
       <module name="login-backend" options="" />
       <module name="loginserver" options="-parameters" />
     </option>

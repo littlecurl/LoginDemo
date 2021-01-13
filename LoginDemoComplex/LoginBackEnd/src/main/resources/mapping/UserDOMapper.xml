@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="edu.heuet.android.logindemo.dao.UserDOMapper">
+<mapper namespace="edu.heuet.shaohua.dao.UserDOMapper">
 
-  <resultMap id="BaseResultMap" type="edu.heuet.android.logindemo.dataobject.UserDO">
+  <resultMap id="BaseResultMap" type="edu.heuet.shaohua.dataobject.UserDO">
     <id     column="id" jdbcType="INTEGER" property="id" />
     <result column="name" jdbcType="VARCHAR" property="name" />
     <result column="gender" jdbcType="TINYINT" property="gender" />
@@ -37,7 +37,7 @@
   </delete>
 
 
-  <insert id="insert" parameterType="edu.heuet.android.logindemo.dataobject.UserDO">
+  <insert id="insert" parameterType="edu.heuet.shaohua.dataobject.UserDO">
     insert into user_info (id, name, gender,
       age, telephone, register_mode, 
       third_part_id)
@@ -51,7 +51,7 @@
   <!-- 因为，如果没有指定对应字段，则会使用设计数据库时的默认字段 -->
   <!-- 而我们在设计数据库时，将默认字段都not null -->
   <!-- 这样对Java程序友好一些 -->
-  <insert id="insertSelective" parameterType="edu.heuet.android.logindemo.dataobject.UserDO"
+  <insert id="insertSelective" parameterType="edu.heuet.shaohua.dataobject.UserDO"
     keyProperty="id" useGeneratedKeys="true">
     insert into user_info
     <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -103,7 +103,7 @@
   </insert>
 
 
-  <update id="updateByPrimaryKeySelective" parameterType="edu.heuet.android.logindemo.dataobject.UserDO">
+  <update id="updateByPrimaryKeySelective" parameterType="edu.heuet.shaohua.dataobject.UserDO">
     update user_info
     <set>
       <if test="name != null">
@@ -129,7 +129,7 @@
   </update>
 
 
-  <update id="updateByPrimaryKey" parameterType="edu.heuet.android.logindemo.dataobject.UserDO">
+  <update id="updateByPrimaryKey" parameterType="edu.heuet.shaohua.dataobject.UserDO">
     update user_info
     set name = #{name,jdbcType=VARCHAR},
       gender = #{gender,jdbcType=TINYINT},

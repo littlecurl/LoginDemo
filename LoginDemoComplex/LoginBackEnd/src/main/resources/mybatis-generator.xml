@@ -6,14 +6,14 @@
     <context id="DB2Tables" targetRuntime="MyBatis3">
         <!-- 数据库链接地址及连接用户密码 -->
         <jdbcConnection driverClass="com.mysql.jdbc.Driver"
-                        connectionURL="jdbc:mysql://127.0.0.1:3306/login_db"
+                        connectionURL="jdbc:mysql://127.0.0.1:3306/login_db?serverTimezone=Asia/Shanghai&amp;useUnicode=true&amp;characterEncoding=utf8&amp;useSSL=false"
                         userId="root"
                         password="123456">
         </jdbcConnection>
         <!-- 生成dataobject类存放位置 -->
         <!-- 意思就是每个数据库表映射的entity java类的位置 -->
         <!-- 老外真有意思，先说包名targetPackage，然后再说相对路径targetProject -->
-        <javaModelGenerator targetPackage="edu.heuet.android.logindemo.dataobject" targetProject="src/main/java">
+        <javaModelGenerator targetPackage="edu.heuet.shaohua.dataobject" targetProject="src/main/java">
             <property name="enableSubPackages" value="true" />
             <property name="trimStrings" value="true" />
         </javaModelGenerator>
@@ -24,7 +24,7 @@
         </sqlMapGenerator>
         <!-- 生成DAO类存放位置 -->
         <!-- DAO类里持有dataobject的引用，可以进行相应model的操作 -->
-        <javaClientGenerator type="XMLMAPPER" targetPackage="edu.heuet.android.logindemo.dao"  targetProject="src/main/java">
+        <javaClientGenerator type="XMLMAPPER" targetPackage="edu.heuet.shaohua.dao" targetProject="src/main/java">
             <property name="enableSubPackages" value="true" />
         </javaClientGenerator>
         <!-- 生成mysql对应表的类名 -->
